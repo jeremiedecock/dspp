@@ -35,6 +35,14 @@
 # - gérer le cas avec 1 seul écran
 # - gérer le cas avec 3 écrans et plus -> permettre de spécifier les numéros d'écrans à utiliser dans les options
 # - pypoppler is a bit outdated now (2014) as it only works with Python 2.x and Qt4 : see http://stackoverflow.com/questions/9682297/displaying-pdf-files-with-python3  for alternatives...
+#
+# Pointeur Boulanger (xev):
+# - left: keycode 112 (keysym 0xff55, Prior) (PgPrec)
+# - right: keycode 117 (keysym 0xff56, Next) (PgSuiv)
+# - fullscreen: keycode 50 (keysym 0xffe1, Shift_L) + keycode 71 (keysym 0xffc2, F5)
+# - Echap: keycode 9 (keysym 0xff1b, Escape)
+
+REMOTE_CONTROL=True
 
 """
 Dual Screen PDF Presenter.
@@ -109,6 +117,13 @@ class PDFController():
         """
         # See http://pyqt.sourceforge.net/Docs/PyQt4/qt.html#Key-enum for all keys
         if e.key() == QtCore.Qt.Key_Escape:
+            if REMOTE_CONTROL:
+                pass
+            else:
+                self.window_slides.close()
+                self.window_notes.close()
+
+        if e.key() == QtCore.Qt.Key_Q:
             self.window_slides.close()
             self.window_notes.close()
 
@@ -121,11 +136,33 @@ class PDFController():
             self.renderCurrentPage()
 
         elif e.key() == QtCore.Qt.Key_PageUp:
-            self.current_page_num = max(self.current_page_num - 5, 0)
+            if REMOTE_CONTROL:
+                self.current_page_num = max(self.current_page_num - 1, 0)
+            else:
+                self.current_page_num = max(self.current_page_num - 5, 0)
             self.renderCurrentPage()
 
         elif e.key() == QtCore.Qt.Key_PageDown:
+            if REMOTE_CONTROL:
+                self.current_page_num = min(self.current_page_num + 1, self.num_pages - 1)
+            else:
+                self.current_page_num = min(self.current_page_num + 5, self.num_pages - 1)
+            self.renderCurrentPage()
+
+        elif e.key() == QtCore.Qt.Key_K:
+            self.current_page_num = max(self.current_page_num - 5, 0)
+            self.renderCurrentPage()
+
+        elif e.key() == QtCore.Qt.Key_J:
             self.current_page_num = min(self.current_page_num + 5, self.num_pages - 1)
+            self.renderCurrentPage()
+
+        elif e.key() == QtCore.Qt.Key_H:
+            self.current_page_num = max(self.current_page_num - 10, 0)
+            self.renderCurrentPage()
+
+        elif e.key() == QtCore.Qt.Key_L:
+            self.current_page_num = min(self.current_page_num + 10, self.num_pages - 1)
             self.renderCurrentPage()
 
         elif e.key() == QtCore.Qt.Key_Home:
