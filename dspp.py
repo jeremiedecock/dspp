@@ -28,14 +28,6 @@
 #      http://web.archive.org/web/20120417095851/http://www.rkblog.rk.edu.pl/w/p/rendering-pdf-files-pyqt4-pypoppler-qt4/
 #      http://bazaar.launchpad.net/~j-corwin/openlp/pdf/annotate/head:/openlp/plugins/presentations/lib/pdfcontroller.py
 
-# TODO
-# - fix the bug zoom in then zoom out (vertically recenter the label) -> Alignment H et V => il faut forcer à redimensionner le label et la vbox (probablement un problème avec le Layout -> le supprimer ?)
-# - add a clock on the note screen (and update it every seconds) -> cf. QTimer
-# - check command options
-# - gérer le cas avec 1 seul écran
-# - gérer le cas avec 3 écrans et plus -> permettre de spécifier les numéros d'écrans à utiliser dans les options
-# - pypoppler is a bit outdated now (2014) as it only works with Python 2.x and Qt4 : see http://stackoverflow.com/questions/9682297/displaying-pdf-files-with-python3  for alternatives...
-#
 # Pointeur Boulanger (xev):
 # - left: keycode 112 (keysym 0xff55, Prior) (PgPrec)
 # - right: keycode 117 (keysym 0xff56, Next) (PgSuiv)
