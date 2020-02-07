@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2012,2014 Jérémie DECOCK (http://www.jdhp.org)
+# Copyright (c) 2012,2014,2020 Jérémie DECOCK (http://www.jdhp.org)
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -12,7 +12,7 @@
 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
- 
+
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,7 +22,7 @@
 # THE SOFTWARE.
 
 # Debian packages required:
-# - python-poppler-qt4  (not python-poppler)
+# - python3-poppler-qt5
 
 # See: http://stackoverflow.com/questions/10562945/how-to-display-pdf-with-python-poppler-qt4
 #      http://web.archive.org/web/20120417095851/http://www.rkblog.rk.edu.pl/w/p/rendering-pdf-files-pyqt4-pypoppler-qt4/
@@ -46,15 +46,17 @@ import sys
 import argparse
 
 try:
-    from PyQt4 import QtGui, QtCore
+    from PyQt5 import QtGui, QtCore
+    from PyQt5.QtGui import QPixmap
+    from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QLabel, QVBoxLayout
 except ImportError as e:
-    print("Error: PyQt4 is not installed or not found.")
+    print("Error: PyQt5 is not installed or not found.")
     sys.exit(1)
     
 try:
-    import popplerqt4
+    import popplerqt5
 except ImportError as e:
-    print("Error: Poppler for Qt4 is not installed or not found.")
+    print("Error: Poppler for Qt5 is not installed or not found.")
     sys.exit(1)
 
 #######################################
@@ -210,7 +212,7 @@ class PDFController():
 
 
 
-class Window(QtGui.QWidget):
+class Window(QWidget):
     """
     Extends Qt widget class.
     """
@@ -228,12 +230,12 @@ class Window(QtGui.QWidget):
         self.num_pages = self.doc.numPages()
 
         # Create a label with the pixmap
-        self.label = QtGui.QLabel(self)
+        self.label = QLabel(self)
         #self.label.setAlignment(QtCore.Qt.AlignCenter)  # To center the label (ie the image)  # TODO
         self.label.setAlignment(QtCore.Qt.AlignHCenter)  # To center the label (ie the image)  # TODO
 
         # Create the layout
-        vbox = QtGui.QVBoxLayout()
+        vbox = QVBoxLayout()
         vbox.addWidget(self.label)
 
         # Set the layout
@@ -277,7 +279,7 @@ class Window(QtGui.QWidget):
                 #   yres    vertical resolution of the graphics device, in dots per inch
                 #   rotate  how to rotate the page
                 image = page.renderToImage(72. * ratio, 72. * ratio)
-                pixmap = QtGui.QPixmap.fromImage(image)
+                pixmap = QPixmap.fromImage(image)
 
                 self.label.setPixmap(pixmap)
             else:
@@ -308,21 +310,21 @@ def main():
 
     # POPPLER #########################
 
-    slides_doc = popplerqt4.Poppler.Document.load(slides_pdf_file_path)
-    #slides_doc.setRenderBackend(popplerqt4.Poppler.Document.SplashBackend) # ok (default)
-    #slides_doc.setRenderBackend(popplerqt4.Poppler.Document.ArthurBackend) # bad
-    slides_doc.setRenderHint(popplerqt4.Poppler.Document.Antialiasing)
-    slides_doc.setRenderHint(popplerqt4.Poppler.Document.TextAntialiasing)
+    slides_doc = popplerqt5.Poppler.Document.load(slides_pdf_file_path)
+    #slides_doc.setRenderBackend(popplerqt5.Poppler.Document.SplashBackend) # ok (default)
+    #slides_doc.setRenderBackend(popplerqt5.Poppler.Document.ArthurBackend) # bad
+    slides_doc.setRenderHint(popplerqt5.Poppler.Document.Antialiasing)
+    slides_doc.setRenderHint(popplerqt5.Poppler.Document.TextAntialiasing)
 
-    notes_doc = popplerqt4.Poppler.Document.load(notes_pdf_file_path)
-    #notes_doc.setRenderBackend(popplerqt4.Poppler.Document.SplashBackend) # ok (default)
-    #notes_doc.setRenderBackend(popplerqt4.Poppler.Document.ArthurBackend) # bad
-    notes_doc.setRenderHint(popplerqt4.Poppler.Document.Antialiasing)
-    notes_doc.setRenderHint(popplerqt4.Poppler.Document.TextAntialiasing)
+    notes_doc = popplerqt5.Poppler.Document.load(notes_pdf_file_path)
+    #notes_doc.setRenderBackend(popplerqt5.Poppler.Document.SplashBackend) # ok (default)
+    #notes_doc.setRenderBackend(popplerqt5.Poppler.Document.ArthurBackend) # bad
+    notes_doc.setRenderHint(popplerqt5.Poppler.Document.Antialiasing)
+    notes_doc.setRenderHint(popplerqt5.Poppler.Document.TextAntialiasing)
 
     # QT4 #############################
 
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
 
     # For an application, the screen where the main widget resides is the
     # primary screen. This is stored in the primaryScreen property. All windows
@@ -330,7 +332,7 @@ def main():
     # boundaries of the primary screen; for example, it would be inconvenient
     # if a dialog box popped up on a different screen, or split over two
     # screens.
-    desktop = QtGui.QDesktopWidget()
+    desktop = QDesktopWidget()
 
     screen0 = Screen(DEFAULT_SCREEN0_ID, desktop.screenGeometry(DEFAULT_SCREEN0_ID))
     screen1 = Screen(DEFAULT_SCREEN1_ID, desktop.screenGeometry(DEFAULT_SCREEN1_ID))
